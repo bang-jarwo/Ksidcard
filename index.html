@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c72">
+<title>Pembuat Kartu Pelajar</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-mark">✦</div><div><b id="schoolTitle">PEMBUAT KARTU PELAJAR</b><small>Manajemen kartu pelajar digital</small></div></div>
+  <button class="ghost" id="refreshBtn">↻ Sinkronkan</button>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy"><span class="eyebrow">SISTEM KARTU PELAJAR</span><h1>Kelola kartu pelajar<br><em>lebih cepat & rapi.</em></h1>
+  <p id="aboutText">Buat kartu pelajar ukuran KTP dengan barcode otomatis dari NIS/NISN, lalu unduh satuan atau cetak massal.</p>
+  <div class="hero-actions"><button class="primary" data-view="cards">Lihat & Download Kartu</button><button class="secondary" data-view="settings">Pengaturan</button></div></div>
+  <div class="hero-art"><div class="mini-card"><div class="mini-head"><div class="mini-logo">✦</div><div><b id="miniSchool">NAMA SEKOLAH</b><small>KARTU PELAJAR</small></div></div><div class="mini-body"><div class="mini-photo">FOTO</div><div class="mini-lines"><b>NAMA SISWA</b><span>NISN: 0000000000</span><span>KELAS: X</span><span>TTL: Kota, 01-01-2010</span></div></div><div class="mini-bar"></div></div></div>
+</section>
+<section class="stats">
+  <article><span>Total siswa</span><b id="totalStudents">—</b></article>
+  <article><span>Laki-laki</span><b id="maleStudents">—</b></article>
+  <article><span>Perempuan</span><b id="femaleStudents">—</b></article>
+  <article><span>Terhubung</span><b id="connection">Belum diatur</b></article>
+</section>
+<nav class="tabs"><button class="tab active" data-view="cards">Kartu pelajar</button><button class="tab" data-view="settings">Pengaturan</button><button class="tab" data-view="help">Panduan</button></nav>
+
+<section id="cardsView" class="panel">
+  <div class="section-head"><div><span class="eyebrow">ARSIP KARTU</span><h2>Daftar siswa</h2><p>Temukan siswa lalu buat atau unduh kartu depan dan belakang.</p></div><button class="primary" id="bulkPdf">Download PDF massal</button></div>
+  <div class="filters"><input id="search" placeholder="Cari NIS/NISN, nama, kelas, jurusan…"><select id="classFilter"><option value="">Semua kelas</option></select><select id="majorFilter"><option value="">Semua jurusan</option></select></div>
+  <div id="studentList" class="student-list"><div class="empty">Hubungkan database terlebih dahulu di Pengaturan.</div></div>
+</section>
+
+<section id="settingsView" class="panel hidden">
+  <div class="section-head"><div><span class="eyebrow">KONFIGURASI</span><h2>Pengaturan aplikasi</h2><p>Hubungkan Google Apps Script dan atur identitas serta desain kartu.</p></div></div>
+  <div class="settings-grid">
+    <div class="setting-card">
+      <h3>1. Koneksi database</h3>
+      <label>URL Web App Google Apps Script</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      <label>Kode admin</label><input id="adminPin" type="password" placeholder="Kode admin awal: 123456">
+      <button class="primary" id="connectBtn">Simpan & hubungkan</button>
+      <p class="hint">Alamat URL dan kode akses disimpan di browser untuk sesi penggunaan. Data siswa tetap berada di Google Spreadsheet/Drive.</p>
+    </div>
+    <div class="setting-card">
+      <h3>2. Identitas sekolah</h3>
+      <label>Nama sekolah</label><input id="schoolName" placeholder="Nama sekolah">
+      <label>Tentang aplikasi / sekolah</label><textarea id="schoolAbout" rows="3"></textarea>
+      <label>Logo sekolah</label><input id="schoolLogo" type="file" accept="image/*">
+      <button class="secondary" id="saveSchool">Simpan identitas</button>
+    </div>
+    <div class="setting-card">
+      <h3>3. Desain kartu</h3>
+      <label>Warna utama</label><input id="themeColor" type="color" value="#123c72">
+      <label>Latar depan kartu (opsional)</label><input id="frontBg" type="file" accept="image/*">
+      <label>Latar belakang kartu (opsional)</label><input id="backBg" type="file" accept="image/*">
+      <button class="secondary" id="saveDesign">Simpan desain</button>
+      <button class="ghost" id="downloadDefault">Download latar default</button>
+    </div>
+    <div class="setting-card">
+      <h3>4. Aturan pemegang kartu</h3>
+      <textarea id="rules" rows="7">1. Kartu wajib dibawa selama berada di lingkungan sekolah.\n2. Kartu tidak boleh dipindahtangankan.\n3. Jika kartu hilang, segera lapor kepada pihak sekolah.\n4. Kartu dikembalikan apabila sudah tidak menjadi siswa.</textarea>
+      <button class="secondary" id="saveRules">Simpan aturan</button>
+    </div>
+  </div>
+  <div class="setting-card import-card">
+    <h3>5. Data siswa</h3><p>Data siswa dikelola di sheet DATA_SISWA pada Google Spreadsheet. Kolom minimal: NISN, NAMA, JENIS_KELAMIN, TTL, ALAMAT, KELAS, JURUSAN, FOTO_URL.</p>
+    <p class="hint">Foto dapat diunggah melalui lembar Google Drive dengan URL file yang dapat dibaca oleh pengguna aplikasi. Panduan impor tersedia di README.</p>
+  </div>
+</section>
+<section id="helpView" class="panel hidden">
+  <span class="eyebrow">MULAI PENGGUNAAN</span><h2>Panduan pemasangan</h2>
+  <ol class="guide"><li>Unggah folder <b>frontend</b> ke repository GitHub dan aktifkan GitHub Pages.</li><li>Buat project Google Apps Script baru, tempel file <b>backend/Code.gs</b>, lalu jalankan fungsi <b>setup()</b>.</li><li>Deploy sebagai Web App: Execute as <b>Me</b>, akses <b>Anyone</b>. Salin URL /exec.</li><li>Buka aplikasi GitHub Pages, masuk Pengaturan, masukkan URL /exec dan kode admin.</li><li>Isi DATA_SISWA di spreadsheet. Klik Sinkronkan untuk memuat data.</li></ol>
+  <p class="warning">Catatan: aplikasi ini menggunakan Google Apps Script sebagai backend. Kode admin awal harus segera diganti di Script Properties setelah setup. Batasi akses URL spreadsheet dan folder Drive sesuai kebijakan sekolah.</p>
+</section>
+</main>
+<footer>© <span id="year"></span> Pembuat Kartu Pelajar · Data dikelola sekolah</footer>
+<div id="toast" class="toast"></div>
+<iframe name="postTarget" id="postTarget" class="hidden"></iframe>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body></html>
